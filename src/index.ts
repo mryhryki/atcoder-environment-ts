@@ -1,25 +1,20 @@
 import * as fs from "fs";
 const input = fs.readFileSync("/dev/stdin", "utf8");
 
-const [c500, c100, c50, total] = input.split("\n").map((line) => parseInt(line, 10));
-if (total % 100 === 50 && c50 === 0) {
-  console.log(0);
-  process.exit(0);
-}
+const [N, A, B] = input
+  .trim()
+  .split(" ")
+  .map((line) => parseInt(line, 10));
 
-const c500max = Math.min(Math.floor(total / 500), c500);
-const c100max = Math.min(Math.floor(total / 100), c100);
-const c50max = Math.min(Math.floor(total / 50), c50);
+const total = Array.from({ length: N })
+  .map((_, i) => i + 1)
+  .filter((n) => {
+    const sum = n
+      .toString(10)
+      .split("")
+      .reduce((t, n) => t + parseInt(n, 10), 0);
+    return A <= sum && sum <= B;
+  })
+  .reduce((total, n) => total + n, 0);
 
-let count = 0;
-Array.from({ length: c500max + 1 }).forEach((_, i) => {
-  Array.from({ length: c100max + 1 }).forEach((_, j) => {
-    Array.from({ length: c50max + 1 }).forEach((_, k) => {
-      if (500 * i + 100 * j + 50 * k === total) {
-        count++;
-      }
-    });
-  });
-});
-
-console.log(count);
+console.log(total);
